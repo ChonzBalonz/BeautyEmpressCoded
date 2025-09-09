@@ -1,0 +1,454 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    color: white;
+    background: black;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Hero Section with Slideshow */
+.hero {
+    height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.slideshow-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.slide {
+    display: none;
+    width: 100%;
+    height: 100%;
+}
+
+.slide video,
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    opacity: 0.6;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+
+.hero-title {
+    font-size: 8rem;
+    font-weight: 700;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    line-height: 0.9;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+    opacity: 0.85;
+    background: linear-gradient(45deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.title-line {
+    display: block;
+}
+
+/* Salon Suites Section */
+.salon-suites {
+    background: black;
+    padding: 80px 0;
+    text-align: center;
+}
+
+.section-title {
+    font-size: 4rem;
+    font-weight: 700;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 40px;
+}
+
+.booking-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.book-button {
+    background: white;
+    color: black;
+    border: 2px solid black;
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.book-button:hover {
+    background: black;
+    color: white;
+    border-color: white;
+}
+
+.rating {
+    display: flex;
+    gap: 5px;
+}
+
+.rating .fas {
+    font-size: 1.2rem;
+    color: black;
+}
+
+.rating .filled {
+    color: black;
+}
+
+/* Our Services Section */
+.our-services {
+    background: black;
+    padding: 80px 0;
+}
+
+.services-intro {
+    font-size: 1.2rem;
+    color: white;
+    text-align: center;
+    margin-bottom: 60px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 40px;
+    margin-top: 40px;
+}
+
+.service-item h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.service-item p {
+    font-size: 1rem;
+    color: white;
+    line-height: 1.6;
+}
+
+/* FAQ Section */
+.faq {
+    background: black;
+    padding: 80px 0;
+}
+
+.faq-container {
+    max-width: 600px;
+    margin: 0 auto;
+    font-family: sans-serif;
+    color: #ffffff;
+}
+
+.faq-item {
+    border-bottom: 1px solid #ffffff;
+    padding: 10px 0;
+}
+
+.faq-question {
+    cursor: pointer;
+    font-weight: bold;
+    position: relative;
+    color: #ffffff;
+    transition: opacity 0.3s ease;
+}
+
+.faq-question::after {
+    content: '+';
+    position: absolute;
+    right: 0;
+    transition: transform 0.3s ease;
+}
+
+.faq-question.active {
+    opacity: 0.6;
+}
+
+.faq-question.active::after {
+    content: '-';
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.4s ease;
+    padding: 0 0;
+    color: #ffffff;
+}
+
+.faq-answer.open {
+    max-height: 1000px; 
+    padding: 10px 0;
+}
+
+.faq-answer > div {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+}
+
+.faq-answer a {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+/* Contact Section */
+.contact {
+    background: black;
+    padding: 80px 0;
+}
+
+.contact-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+}
+
+.contact-info h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.contact-info p {
+    font-size: 1.1rem;
+    color: white;
+    line-height: 1.6;
+}
+
+.contact-form {
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    color: black;
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: black;
+    background: white;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #666;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.submit-button {
+    background: black;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.submit-button:hover {
+    background: #333;
+}
+
+/* Location Section */
+.location {
+    background: black;
+    padding: 80px 0;
+}
+
+.location-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+}
+
+.location-info h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.address p {
+    font-size: 1.1rem;
+    color: white;
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+.map-container {
+    background: #f0f0f0;
+    border-radius: 10px;
+    overflow: hidden;
+    height: 400px;
+}
+
+.map-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+    color: #666;
+    text-align: center;
+}
+
+.map-placeholder i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    color: #999;
+}
+
+.map-placeholder p {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.map-placeholder small {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 4rem;
+    }
+    
+    .section-title {
+        font-size: 2.5rem;
+    }
+    
+    .booking-section {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .services-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .contact-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+    
+    .location-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+    
+    .contact-form {
+        padding: 30px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 3rem;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .container {
+        padding: 0 15px;
+    }
+    
+    .contact-form {
+        padding: 20px 15px;
+    }
+    
+    .faq-question {
+        padding: 20px 0;
+    }
+    
+    .faq-question span {
+        font-size: 1rem;
+    }
+}
