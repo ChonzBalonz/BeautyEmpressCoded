@@ -18,6 +18,56 @@ document.addEventListener('DOMContentLoaded', function() {
     setInterval(nextSlide, 1500); // Change every 1.5 seconds
 });
 
+// Parallax Scrolling Effect
+document.addEventListener('DOMContentLoaded', function() {
+    const slideshowContainer = document.querySelector('.slideshow-container');
+    const heroContent = document.querySelector('.hero-content');
+    
+    if (slideshowContainer) {
+        function updateParallax() {
+            const scrolled = window.pageYOffset;
+            const rate = scrolled * -0.5; // Adjust this value to control parallax speed
+            
+            slideshowContainer.style.transform = `translateY(${rate}px)`;
+            
+            // Fade out hero content as user scrolls
+            if (heroContent) {
+                const heroHeight = document.querySelector('.hero').offsetHeight;
+                const fadeStart = heroHeight * 0.3; // Start fading at 30% of hero height
+                const fadeEnd = heroHeight * 0.8; // Complete fade at 80% of hero height
+                
+                if (scrolled > fadeStart) {
+                    const fadeProgress = Math.min((scrolled - fadeStart) / (fadeEnd - fadeStart), 1);
+                    heroContent.style.opacity = 1 - fadeProgress;
+                    heroContent.style.transform = `translateY(${fadeProgress * 50}px)`;
+                } else {
+                    heroContent.style.opacity = 1;
+                    heroContent.style.transform = 'translateY(0)';
+                }
+            }
+        }
+        
+        // Throttle scroll events for better performance
+        let ticking = false;
+        function requestTick() {
+            if (!ticking) {
+                requestAnimationFrame(updateParallax);
+                ticking = true;
+            }
+        }
+        
+        function handleScroll() {
+            ticking = false;
+            requestTick();
+        }
+        
+        window.addEventListener('scroll', handleScroll);
+        
+        // Initial call
+        updateParallax();
+    }
+});
+
 // FAQ Accordion Functionality - Exact match to provided code
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.faq-question').forEach(question => {
