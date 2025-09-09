@@ -5,14 +5,94 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Beauty Empress Salon Suites - Professional Beauty Services</title>
     <meta name="description" content="Beauty Empress Salon Suites - Professional beauty services including microblading, lip fillers, and permanent makeup training.">
-    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hero-title {
+            font-size: 8rem;
+            font-weight: 700;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            line-height: 0.9;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+            opacity: 0.9;
+            mix-blend-mode: screen;
+            background: rgba(255, 255, 255, 0.1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-stroke: 1px solid rgba(255, 255, 255, 0.8);
+            -webkit-text-stroke: 1px solid rgba(255, 255, 255, 0.8);
+        }
+        
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .slide video,
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            opacity: 0.6;
+        }
+        
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+            padding: 0 0;
+        }
+        
+        .faq-answer.open {
+            max-height: 1000px; 
+            padding: 10px 0;
+        }
+        
+        .faq-question::after {
+            content: '+';
+            position: absolute;
+            right: 0;
+            transition: transform 0.3s ease;
+        }
+        
+        .faq-question.active::after {
+            content: '-';
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 4rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+        }
+    </style>
 </head>
-<body>
+<body class="font-inter text-white bg-black">
     <!-- Hero Section -->
-    <section class="hero">
-        <div class="slideshow-container">
+    <section class="hero h-screen relative flex items-center justify-center overflow-hidden">
+        <div class="slideshow-container absolute top-0 left-0 w-full h-full z-10">
             <!-- Slide 1 - Image -->
             <div class="slide">
                 <img src="https://assets.zyrosite.com/ALpeGv7jg3hbLDKo/tablelearning-Yyv9k87WOosXo9DN.jpg" alt="Slide 1">
@@ -51,72 +131,72 @@
             </div>
         </div>
         
-        <div class="hero-content">
+        <div class="hero-content relative z-20 text-center">
             <h1 class="hero-title">
-                <span class="title-line">Beauty</span>
-                <span class="title-line">Empress</span>
+                <span class="block">Beauty</span>
+                <span class="block">Empress</span>
             </h1>
         </div>
     </section>
 
     <!-- Salon Suites Section -->
-    <section class="salon-suites">
-        <div class="container">
-            <h2 class="section-title">SALON SUITES</h2>
-            <div class="booking-section">
-                <button class="book-button">Book Service Or Class</button>
-                <div class="rating">
-                    <i class="fas fa-star filled"></i>
-                    <i class="fas fa-star filled"></i>
-                    <i class="fas fa-star filled"></i>
-                    <i class="fas fa-star filled"></i>
-                    <i class="fas fa-star"></i>
+    <section class="salon-suites bg-black py-20 text-center">
+        <div class="max-w-6xl mx-auto px-5">
+            <h2 class="text-6xl font-bold text-white uppercase tracking-wider mb-10">SALON SUITES</h2>
+            <div class="flex items-center justify-center gap-8 flex-wrap">
+                <button class="book-button bg-white text-black border-2 border-black px-8 py-4 text-lg font-semibold uppercase tracking-wide cursor-pointer transition-all duration-300 hover:bg-black hover:text-white hover:border-white">Book Service Or Class</button>
+                <div class="rating flex gap-1">
+                    <i class="fas fa-star text-xl text-black filled"></i>
+                    <i class="fas fa-star text-xl text-black filled"></i>
+                    <i class="fas fa-star text-xl text-black filled"></i>
+                    <i class="fas fa-star text-xl text-black filled"></i>
+                    <i class="fas fa-star text-xl text-black"></i>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Our Services Section -->
-    <section class="our-services">
-        <div class="container">
-            <h2 class="section-title">Our Services</h2>
-            <p class="services-intro">Explore our beauty services, including microblading and lip fillers, tailored for you.</p>
+    <section class="our-services bg-black py-20">
+        <div class="max-w-6xl mx-auto px-5">
+            <h2 class="text-6xl font-bold text-white uppercase tracking-wider mb-10 text-center">Our Services</h2>
+            <p class="text-xl text-white text-center mb-16 max-w-2xl mx-auto">Explore our beauty services, including microblading and lip fillers, tailored for you.</p>
             
-            <div class="services-grid">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mt-10">
                 <div class="service-item">
-                    <h3>Permanent Makeup Training</h3>
-                    <p>Join our classes to learn beauty techniques and enhance your skills in microblading.</p>
+                    <h3 class="text-2xl font-bold text-white mb-4 uppercase tracking-wide">Permanent Makeup Training</h3>
+                    <p class="text-base text-white leading-relaxed">Join our classes to learn beauty techniques and enhance your skills in microblading.</p>
                 </div>
                 
                 <div class="service-item">
-                    <h3>Our Mission</h3>
-                    <p>Brows that stay. Lips that slay. Treat yourself to brows, lashes, facials, body sculpting and more! One stop, all the glam.</p>
+                    <h3 class="text-2xl font-bold text-white mb-4 uppercase tracking-wide">Our Mission</h3>
+                    <p class="text-base text-white leading-relaxed">Brows that stay. Lips that slay. Treat yourself to brows, lashes, facials, body sculpting and more! One stop, all the glam.</p>
                 </div>
                 
                 <div class="service-item">
-                    <h3>Salon Suites</h3>
-                    <p>Private salon suites available for rent - perfect for beauty professionals ready to elevate their brand</p>
+                    <h3 class="text-2xl font-bold text-white mb-4 uppercase tracking-wide">Salon Suites</h3>
+                    <p class="text-base text-white leading-relaxed">Private salon suites available for rent - perfect for beauty professionals ready to elevate their brand</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- FAQ Section -->
-    <section class="faq">
-        <div class="container">
-            <div class="faq-container">
-                <div class="faq-item">
-                    <div class="faq-question">What Courses do you offer?</div>
-                    <div class="faq-answer">We offer the following courses for beginner and advanced artists: 
+    <section class="faq bg-black py-20">
+        <div class="max-w-6xl mx-auto px-5">
+            <div class="max-w-2xl mx-auto font-sans text-white">
+                <div class="faq-item border-b border-white py-2">
+                    <div class="faq-question cursor-pointer font-bold relative text-white transition-opacity duration-300">What Courses do you offer?</div>
+                    <div class="faq-answer text-white">We offer the following courses for beginner and advanced artists: 
                         Lip Blush
                         Ombré Powder Brows
                         Nano Brows
                         Microblade & Shading
                         Nano Combo Brows </div>
                 </div>
-                <div class="faq-item">
-                    <div class="faq-question">What is the Course Outline?</div>
-                    <div class="faq-answer">• 1-2 Brow/Lip Training + live model<br>
+                <div class="faq-item border-b border-white py-2">
+                    <div class="faq-question cursor-pointer font-bold relative text-white transition-opacity duration-300">What is the Course Outline?</div>
+                    <div class="faq-answer text-white">• 1-2 Brow/Lip Training + live model<br>
                         • 1-2 Brow/Lip Touch Up Training<br>
                         • $350+ machine + premium kit included<br>
                         • Pigment bottles suitable for all clientele<br>
@@ -128,9 +208,9 @@
                         • How to get started & simple steps to acquire clientele <br>
                         • Certificate of Completion</div>
                 </div>
-                <div class="faq-item">
-                    <div class="faq-question">What is included?</div>
-                    <div class="faq-answer">• $350+ premium kit, supplies & all necessary tools. <br>
+                <div class="faq-item border-b border-white py-2">
+                    <div class="faq-question cursor-pointer font-bold relative text-white transition-opacity duration-300">What is included?</div>
+                    <div class="faq-answer text-white">• $350+ premium kit, supplies & all necessary tools. <br>
                         • Professional wireless tattoo machine that can be used for brows, lips, eyeliner, and fine line tattoos & a full box of universal cartridges. <br>
                         • Full-sized pigments suitable for clients 
                         of all skin tones. <br>
@@ -140,20 +220,20 @@
                         • Certificate of Completion. <br>
                         • After class support & direct contact with your Instructor</div>
                 </div>
-                <div class="faq-item">
-                    <div class="faq-question">Who is this course for?</div>
-                    <div class="faq-answer">• Beginners with no experience looking to join the brow industry <br>
+                <div class="faq-item border-b border-white py-2">
+                    <div class="faq-question cursor-pointer font-bold relative text-white transition-opacity duration-300">Who is this course for?</div>
+                    <div class="faq-answer text-white">• Beginners with no experience looking to join the brow industry <br>
                         • Students who have taken previous brow classes but just don't feel confident <br>
                         • Existing artists who are looking to advance their skills or add new services <br>
                         • Anyone who wants to make their own hours, have work-life balance & gain financial freedom</div>
                 </div>
-                <div class="faq-item">
-                    <div class="faq-question">Will I be able to work on a live model?</div>
-                    <div class="faq-answer">All in-person beginner and advanced training includes a live model practice portion where students will be able to apply what they've learned onto a live model with close supervision from your instructors. During this time you will be able to take pictures and videos of your client and we will teach you how to effectively edit for your new portfolio to market your business.</div>
+                <div class="faq-item border-b border-white py-2">
+                    <div class="faq-question cursor-pointer font-bold relative text-white transition-opacity duration-300">Will I be able to work on a live model?</div>
+                    <div class="faq-answer text-white">All in-person beginner and advanced training includes a live model practice portion where students will be able to apply what they've learned onto a live model with close supervision from your instructors. During this time you will be able to take pictures and videos of your client and we will teach you how to effectively edit for your new portfolio to market your business.</div>
                 </div>
-                <div class="faq-item">
-                    <div class="faq-question">What will you learn?</div>
-                    <div class="faq-answer">• Intro to Brows or Lip Blush Theory <br>
+                <div class="faq-item border-b border-white py-2">
+                    <div class="faq-question cursor-pointer font-bold relative text-white transition-opacity duration-300">What will you learn?</div>
+                    <div class="faq-answer text-white">• Intro to Brows or Lip Blush Theory <br>
                         • Brow mapping & design <br>
                         • Color theory & pigments <br>
                         • Skin anatomy, skin types & conditions <br>
@@ -168,23 +248,23 @@
                         • Marketing & how to acquire clientele <br>
                         • 60 pages of fully loaded materials</div>
                 </div>
-                <div class="faq-item">
-                    <div class="faq-question">Is there a deposit required?</div>
-                    <div class="faq-answer">$500 Non-Refundable, Non-Transferable deposit is required for enrolling and will go towards the total cost of the class fee.</div>
+                <div class="faq-item border-b border-white py-2">
+                    <div class="faq-question cursor-pointer font-bold relative text-white transition-opacity duration-300">Is there a deposit required?</div>
+                    <div class="faq-answer text-white">$500 Non-Refundable, Non-Transferable deposit is required for enrolling and will go towards the total cost of the class fee.</div>
                 </div>
-                <div class="faq-item">
-                    <div class="faq-question">Is there licensing required?</div>
-                    <div class="faq-answer">• No esthetician or cosmetology license required (excluding some specific states) <br>
+                <div class="faq-item border-b border-white py-2">
+                    <div class="faq-question cursor-pointer font-bold relative text-white transition-opacity duration-300">Is there licensing required?</div>
+                    <div class="faq-answer text-white">• No esthetician or cosmetology license required (excluding some specific states) <br>
                         • No beauty experience required <br>
                         • Must be 18+ to enroll</div>
                 </div>
-                <div class="faq-item">
-                    <div class="faq-question">Do you offer financing?</div>
-                    <div class="faq-answer">Yes, we offer financing options for our training courses. Please send us an email to <a href="mailto:BeautyEmpress1@icloud.com">BeautyEmpress1@icloud.com</a> to apply.</div>
+                <div class="faq-item border-b border-white py-2">
+                    <div class="faq-question cursor-pointer font-bold relative text-white transition-opacity duration-300">Do you offer financing?</div>
+                    <div class="faq-answer text-white">Yes, we offer financing options for our training courses. Please send us an email to <a href="mailto:BeautyEmpress1@icloud.com" class="text-white underline">BeautyEmpress1@icloud.com</a> to apply.</div>
                 </div>
-                <div class="faq-item">
-                    <div class="faq-question">Our Classes</div>
-                    <div class="faq-answer">
+                <div class="faq-item border-b border-white py-2">
+                    <div class="faq-question cursor-pointer font-bold relative text-white transition-opacity duration-300">Our Classes</div>
+                    <div class="faq-answer text-white">
                         <div><strong>Combo Nano Class:</strong> $2,000.00</div>
                         <div><strong>Create your own package (2 classes):</strong> $3,100.00</div>
                         <div><strong>Hyaluron Pen:</strong> $1,500.00</div>
@@ -198,32 +278,32 @@
     </section>
 
     <!-- Contact Section -->
-    <section class="contact">
-        <div class="container">
-            <div class="contact-content">
+    <section class="contact bg-black py-20">
+        <div class="max-w-6xl mx-auto px-5">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
                 <div class="contact-info">
-                    <h2>Get in Touch</h2>
-                    <p>Contact us for inquiries about microblading, lip fillers, and our beauty classes. We're here to help!</p>
+                    <h2 class="text-5xl font-bold text-white mb-5 uppercase tracking-wide">Get in Touch</h2>
+                    <p class="text-lg text-white leading-relaxed">Contact us for inquiries about microblading, lip fillers, and our beauty classes. We're here to help!</p>
                 </div>
                 
-                <div class="contact-form">
+                <div class="contact-form bg-white p-10 rounded-lg">
                     <form id="contact-form">
-                        <div class="form-group">
-                            <label for="firstName">Your First Name Here</label>
-                            <input type="text" id="firstName" name="firstName" placeholder="Enter your first name">
+                        <div class="mb-6">
+                            <label for="firstName" class="block text-base font-semibold text-black mb-2">Your First Name Here</label>
+                            <input type="text" id="firstName" name="firstName" placeholder="Enter your first name" class="w-full px-4 py-3 border border-gray-300 rounded-md text-base text-black bg-white focus:outline-none focus:border-gray-600">
                         </div>
                         
-                        <div class="form-group">
-                            <label for="email">Your Email Address*</label>
-                            <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+                        <div class="mb-6">
+                            <label for="email" class="block text-base font-semibold text-black mb-2">Your Email Address*</label>
+                            <input type="email" id="email" name="email" placeholder="Enter your email address" required class="w-full px-4 py-3 border border-gray-300 rounded-md text-base text-black bg-white focus:outline-none focus:border-gray-600">
                         </div>
                         
-                        <div class="form-group">
-                            <label for="message">Your Message Here*</label>
-                            <textarea id="message" name="message" placeholder="Share your thoughts here" required></textarea>
+                        <div class="mb-6">
+                            <label for="message" class="block text-base font-semibold text-black mb-2">Your Message Here*</label>
+                            <textarea id="message" name="message" placeholder="Share your thoughts here" required class="w-full px-4 py-3 border border-gray-300 rounded-md text-base text-black bg-white focus:outline-none focus:border-gray-600 resize-y min-h-32"></textarea>
                         </div>
                         
-                        <button type="submit" class="submit-button">Message</button>
+                        <button type="submit" class="submit-button bg-black text-white border-none px-8 py-4 text-base font-semibold uppercase tracking-wide cursor-pointer transition-all duration-300 hover:bg-gray-800">Message</button>
                     </form>
                 </div>
             </div>
@@ -231,23 +311,23 @@
     </section>
 
     <!-- Location Section -->
-    <section class="location">
-        <div class="container">
-            <div class="location-content">
+    <section class="location bg-black py-20">
+        <div class="max-w-6xl mx-auto px-5">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
                 <div class="location-info">
-                    <h2>Our Location</h2>
+                    <h2 class="text-5xl font-bold text-white mb-8 uppercase tracking-wide">Our Location</h2>
                     <div class="address">
-                        <p>Salon</p>
-                        <p>12337 s route 59 Plainfield 60585 unit</p>
-                        <p>131</p>
+                        <p class="text-lg text-white mb-3 leading-relaxed">Salon</p>
+                        <p class="text-lg text-white mb-3 leading-relaxed">12337 s route 59 Plainfield 60585 unit</p>
+                        <p class="text-lg text-white mb-3 leading-relaxed">131</p>
                     </div>
                 </div>
                 
-                <div class="map-container">
-                    <div class="map-placeholder">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <p>Interactive Map</p>
-                        <small>12337 s route 59 Plainfield, IL 60585</small>
+                <div class="map-container bg-gray-100 rounded-lg overflow-hidden h-96">
+                    <div class="map-placeholder w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 text-gray-600 text-center">
+                        <i class="fas fa-map-marker-alt text-5xl mb-4 text-gray-400"></i>
+                        <p class="text-xl font-semibold mb-1 text-gray-800">Interactive Map</p>
+                        <small class="text-sm text-gray-600">12337 s route 59 Plainfield, IL 60585</small>
                     </div>
                 </div>
             </div>
