@@ -70,11 +70,14 @@ body {
     letter-spacing: 0.1em;
     line-height: 0.9;
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
-    opacity: 0.85;
-    background: linear-gradient(45deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+    opacity: 0.9;
+    mix-blend-mode: screen;
+    background: rgba(255, 255, 255, 0.1);
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
     background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-stroke: 1px solid rgba(255, 255, 255, 0.8);
+    -webkit-text-stroke: 1px solid rgba(255, 255, 255, 0.8);
 }
 
 .title-line {
