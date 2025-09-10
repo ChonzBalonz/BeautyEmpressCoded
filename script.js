@@ -1,7 +1,9 @@
-// Slideshow Functionality
+// Slideshow Functionality with Mobile Optimization
 document.addEventListener('DOMContentLoaded', function() {
     const slides = document.querySelectorAll('.slide');
     let index = 0;
+    let slideInterval;
+    let isUserInteracting = false;
 
     function showSlide(i) {
         slides.forEach(slide => slide.style.display = 'none');
@@ -9,37 +11,114 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function nextSlide() {
-        index = (index + 1) % slides.length;
-        showSlide(index);
+        if (!isUserInteracting) {
+            index = (index + 1) % slides.length;
+            showSlide(index);
+        }
+    }
+
+    function startSlideshow() {
+        slideInterval = setInterval(nextSlide, 3000); // Slower for mobile
+    }
+
+    function stopSlideshow() {
+        clearInterval(slideInterval);
+    }
+
+    // Touch/swipe support for mobile
+    let startX = 0;
+    let startY = 0;
+    let endX = 0;
+    let endY = 0;
+
+    const slideshowContainer = document.querySelector('.slideshow-container');
+    
+    if (slideshowContainer) {
+        slideshowContainer.addEventListener('touchstart', function(e) {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+            isUserInteracting = true;
+            stopSlideshow();
+        });
+
+        slideshowContainer.addEventListener('touchend', function(e) {
+            endX = e.changedTouches[0].clientX;
+            endY = e.changedTouches[0].clientY;
+            
+            const diffX = startX - endX;
+            const diffY = startY - endY;
+            
+            // Only process horizontal swipes
+            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+                if (diffX > 0) {
+                    // Swipe left - next slide
+                    index = (index + 1) % slides.length;
+                } else {
+                    // Swipe right - previous slide
+                    index = (index - 1 + slides.length) % slides.length;
+                }
+                showSlide(index);
+            }
+            
+            // Restart slideshow after user interaction
+            setTimeout(() => {
+                isUserInteracting = false;
+                startSlideshow();
+            }, 2000);
+        });
+
+        // Pause slideshow on hover (desktop only)
+        slideshowContainer.addEventListener('mouseenter', stopSlideshow);
+        slideshowContainer.addEventListener('mouseleave', () => {
+            if (!isUserInteracting) {
+                startSlideshow();
+            }
+        });
     }
 
     // Initialize slideshow
     showSlide(index);
-    setInterval(nextSlide, 1500); // Change every 1.5 seconds
+    startSlideshow();
+
+    // Pause slideshow when page is not visible (mobile battery optimization)
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            stopSlideshow();
+        } else if (!isUserInteracting) {
+            startSlideshow();
+        }
+    });
 });
 
-// Parallax Scrolling Effect
+// Parallax Scrolling Effect with Mobile Optimization
 document.addEventListener('DOMContentLoaded', function() {
     const slideshowContainer = document.querySelector('.slideshow-container');
     const heroContent = document.querySelector('.hero-content');
     
     if (slideshowContainer) {
+        // Detect if device is mobile/touch
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                        ('ontouchstart' in window) || 
+                        (navigator.maxTouchPoints > 0);
+        
         function updateParallax() {
             const scrolled = window.pageYOffset;
-            const rate = scrolled * -0.5; // Adjust this value to control parallax speed
+            
+            // Reduce parallax effect on mobile for better performance
+            const rate = isMobile ? scrolled * -0.2 : scrolled * -0.5;
             
             slideshowContainer.style.transform = `translateY(${rate}px)`;
             
             // Fade out hero content as user scrolls
             if (heroContent) {
                 const heroHeight = document.querySelector('.hero').offsetHeight;
-                const fadeStart = heroHeight * 0.3; // Start fading at 30% of hero height
-                const fadeEnd = heroHeight * 0.8; // Complete fade at 80% of hero height
+                const fadeStart = heroHeight * 0.3;
+                const fadeEnd = heroHeight * 0.8;
                 
                 if (scrolled > fadeStart) {
                     const fadeProgress = Math.min((scrolled - fadeStart) / (fadeEnd - fadeStart), 1);
                     heroContent.style.opacity = 1 - fadeProgress;
-                    heroContent.style.transform = `translateY(${fadeProgress * 50}px)`;
+                    heroContent.style.transform = `translateY(${fadeProgress * (isMobile ? 20 : 50)}px)`;
                 } else {
                     heroContent.style.opacity = 1;
                     heroContent.style.transform = 'translateY(0)';
@@ -61,57 +140,158 @@ document.addEventListener('DOMContentLoaded', function() {
             requestTick();
         }
         
-        window.addEventListener('scroll', handleScroll);
+        // Use passive listeners for better mobile performance
+        window.addEventListener('scroll', handleScroll, { passive: true });
         
         // Initial call
         updateParallax();
+        
+        // Disable parallax on very small screens for performance
+        if (window.innerWidth < 360) {
+            window.removeEventListener('scroll', handleScroll);
+        }
     }
 });
 
-// FAQ Accordion Functionality - Exact match to provided code
+// FAQ Accordion Functionality with Mobile Optimization
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.faq-question').forEach(question => {
-        question.addEventListener('click', () => {
+        // Add keyboard support for accessibility
+        question.setAttribute('tabindex', '0');
+        question.setAttribute('role', 'button');
+        question.setAttribute('aria-expanded', 'false');
+        
+        const answer = question.nextElementSibling;
+        answer.setAttribute('aria-hidden', 'true');
+        
+        function toggleFAQ() {
+            const isActive = question.classList.contains('active');
+            
             question.classList.toggle('active');
-            question.nextElementSibling.classList.toggle('open');
+            answer.classList.toggle('open');
+            
+            // Update ARIA attributes
+            question.setAttribute('aria-expanded', !isActive);
+            answer.setAttribute('aria-hidden', isActive);
+        }
+        
+        // Click/touch support
+        question.addEventListener('click', toggleFAQ);
+        
+        // Keyboard support
+        question.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleFAQ();
+            }
+        });
+        
+        // Touch feedback for mobile
+        question.addEventListener('touchstart', function() {
+            this.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+        });
+        
+        question.addEventListener('touchend', function() {
+            setTimeout(() => {
+                this.style.backgroundColor = '';
+            }, 150);
         });
     });
 });
 
-// Contact Form Handling
-const contactForm = document.getElementById('contact-form');
-if (contactForm) {
-    contactForm.addEventListener('submit', function(e) {
-        e.preventDefault();
+// Contact Form Handling with Mobile Optimization
+document.addEventListener('DOMContentLoaded', function() {
+    const contactForm = document.getElementById('contact-form');
+    
+    if (contactForm) {
+        // Add mobile-optimized input handling
+        const inputs = contactForm.querySelectorAll('input, textarea');
+        inputs.forEach(input => {
+            // Prevent zoom on iOS when focusing inputs
+            if (input.type === 'email' || input.type === 'tel') {
+                input.addEventListener('focus', function() {
+                    if (window.innerWidth < 768) {
+                        document.querySelector('meta[name="viewport"]').setAttribute('content', 
+                            'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+                    }
+                });
+                
+                input.addEventListener('blur', function() {
+                    if (window.innerWidth < 768) {
+                        document.querySelector('meta[name="viewport"]').setAttribute('content', 
+                            'width=device-width, initial-scale=1.0');
+                    }
+                });
+            }
+            
+            // Add real-time validation feedback
+            input.addEventListener('blur', function() {
+                validateField(this);
+            });
+        });
         
-        // Get form data
-        const formData = new FormData(this);
-        const firstName = formData.get('firstName');
-        const email = formData.get('email');
-        const message = formData.get('message');
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(this);
+            const firstName = formData.get('firstName');
+            const email = formData.get('email');
+            const message = formData.get('message');
+            
+            // Clear previous validation errors
+            clearValidationErrors();
+            
+            // Basic validation
+            if (!firstName || !email || !message) {
+                showMessage('Please fill in all required fields.', 'error');
+                return;
+            }
+            
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showMessage('Please enter a valid email address.', 'error');
+                return;
+            }
+            
+            // Simulate form submission
+            showLoadingState();
+            
+            setTimeout(() => {
+                showSuccessMessage(firstName);
+                this.reset();
+                clearValidationErrors();
+            }, 2000);
+        });
+    }
+    
+    function validateField(field) {
+        const value = field.value.trim();
+        const fieldName = field.name;
         
-        // Basic validation
-        if (!firstName || !email || !message) {
-            showMessage('Please fill in all required fields.', 'error');
-            return;
+        // Remove existing error styling
+        field.classList.remove('error');
+        
+        if (fieldName === 'email' && value) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(value)) {
+                field.classList.add('error');
+            }
         }
         
-        // Email validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            showMessage('Please enter a valid email address.', 'error');
-            return;
+        if (field.required && !value) {
+            field.classList.add('error');
         }
-        
-        // Simulate form submission
-        showLoadingState();
-        
-        setTimeout(() => {
-            showSuccessMessage(firstName);
-            this.reset();
-        }, 2000);
-    });
-}
+    }
+    
+    function clearValidationErrors() {
+        const inputs = contactForm.querySelectorAll('input, textarea');
+        inputs.forEach(input => {
+            input.classList.remove('error');
+        });
+    }
+});
 
 // Book Service Button
 const bookButton = document.querySelector('.book-button');
@@ -246,6 +426,89 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+// Mobile Navigation Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const navToggle = document.getElementById('nav-toggle');
+    const navMenu = document.getElementById('nav-menu');
+    const navLinks = document.querySelectorAll('.nav-link');
+    const navBookButton = document.querySelector('.nav-book-button');
+    
+    if (navToggle && navMenu) {
+        // Toggle mobile menu
+        navToggle.addEventListener('click', function() {
+            navToggle.classList.toggle('active');
+            navMenu.classList.toggle('active');
+            
+            // Prevent body scroll when menu is open
+            if (navMenu.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        });
+        
+        // Close menu when clicking on links
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                navToggle.classList.remove('active');
+                navMenu.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!navToggle.contains(e.target) && !navMenu.contains(e.target)) {
+                navToggle.classList.remove('active');
+                navMenu.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+        
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+                navToggle.classList.remove('active');
+                navMenu.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+    }
+    
+    // Handle nav book button
+    if (navBookButton) {
+        navBookButton.addEventListener('click', function() {
+            const contactSection = document.querySelector('.contact');
+            if (contactSection) {
+                contactSection.scrollIntoView({ behavior: 'smooth' });
+                // Close mobile menu
+                if (navToggle && navMenu) {
+                    navToggle.classList.remove('active');
+                    navMenu.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            }
+        });
+    }
+    
+    // Smooth scrolling for navigation links
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetSection = document.querySelector(targetId);
+            
+            if (targetSection) {
+                const offsetTop = targetSection.offsetTop - 80; // Account for mobile nav height
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+});
+
 // Add CSS for smooth transitions
 const style = document.createElement('style');
 style.textContent = `
@@ -267,6 +530,14 @@ style.textContent = `
     
     .slide {
         transition: opacity 0.5s ease;
+    }
+    
+    .nav-toggle {
+        transition: all 0.3s ease;
+    }
+    
+    .nav-menu {
+        transition: all 0.3s ease;
     }
 `;
 document.head.appendChild(style);
