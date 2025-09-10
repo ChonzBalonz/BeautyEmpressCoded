@@ -487,6 +487,105 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+// Mobile Service Items Wave Animation on Scroll
+document.addEventListener('DOMContentLoaded', function() {
+    // Only run on mobile devices
+    const isMobile = window.innerWidth <= 767;
+    
+    if (isMobile) {
+        const serviceItems = document.querySelectorAll('.service-item');
+        let lastScrollY = window.pageYOffset;
+        let scrollTimeout;
+        let isAnimating = false;
+        
+        function triggerWaveAnimation(item, scrollDirection) {
+            if (isAnimating) return;
+            
+            isAnimating = true;
+            
+            // Remove any existing animation classes
+            item.classList.remove('wave-animate', 'wave-scroll-down', 'wave-scroll-up');
+            
+            // Add the appropriate animation class
+            setTimeout(() => {
+                item.classList.add('wave-animate', `wave-scroll-${scrollDirection}`);
+                
+                // Remove animation classes after animation completes
+                setTimeout(() => {
+                    item.classList.remove('wave-animate', 'wave-scroll-down', 'wave-scroll-up');
+                    isAnimating = false;
+                }, 600);
+            }, 50);
+        }
+        
+        function isElementInViewport(element) {
+            const rect = element.getBoundingClientRect();
+            const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+            
+            // Element is in viewport if it's at least 50% visible
+            return (
+                rect.top < windowHeight * 0.8 &&
+                rect.bottom > windowHeight * 0.2
+            );
+        }
+        
+        function handleScroll() {
+            const currentScrollY = window.pageYOffset;
+            const scrollDirection = currentScrollY > lastScrollY ? 'down' : 'up';
+            const scrollDelta = Math.abs(currentScrollY - lastScrollY);
+            
+            // Only trigger animation if scroll is significant enough
+            if (scrollDelta > 20) {
+                serviceItems.forEach((item, index) => {
+                    if (isElementInViewport(item)) {
+                        // Add a small delay between items for a wave effect
+                        setTimeout(() => {
+                            triggerWaveAnimation(item, scrollDirection);
+                        }, index * 100);
+                    }
+                });
+                
+                lastScrollY = currentScrollY;
+            }
+            
+            // Clear existing timeout
+            clearTimeout(scrollTimeout);
+            
+            // Set timeout to reset animation state
+            scrollTimeout = setTimeout(() => {
+                isAnimating = false;
+            }, 200);
+        }
+        
+        // Throttled scroll listener for better performance
+        let ticking = false;
+        function requestTick() {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    handleScroll();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }
+        
+        // Add scroll listener with passive option for better mobile performance
+        window.addEventListener('scroll', requestTick, { passive: true });
+        
+        // Handle orientation change
+        window.addEventListener('orientationchange', function() {
+            setTimeout(() => {
+                lastScrollY = window.pageYOffset;
+            }, 100);
+        });
+        
+        // Clean up on page unload
+        window.addEventListener('beforeunload', function() {
+            window.removeEventListener('scroll', requestTick);
+        });
+    }
+});
+
 // Add CSS for smooth transitions
 const style = document.createElement('style');
 style.textContent = `
