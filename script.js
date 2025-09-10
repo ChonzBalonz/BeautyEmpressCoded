@@ -496,41 +496,56 @@ document.addEventListener('DOMContentLoaded', function() {
         const serviceItems = document.querySelectorAll('.service-item');
         let lastScrollY = window.pageYOffset;
         let scrollTimeout;
-        let isAnimating = false;
+        let animationTimeouts = new Set();
+        let isScrolling = false;
         
         function triggerWaveAnimation(item, scrollDirection) {
+            // Clear any existing timeouts for this item
+            const itemId = item.dataset.itemId || Math.random().toString(36).substr(2, 9);
+            item.dataset.itemId = itemId;
+            
             // Remove any existing animation classes
             item.classList.remove('wave-animate', 'wave-scroll-down', 'wave-scroll-up');
             
             // Add the appropriate animation class
-            setTimeout(() => {
+            const timeout1 = setTimeout(() => {
                 item.classList.add('wave-animate', `wave-scroll-${scrollDirection}`);
                 
                 // Remove animation classes after animation completes
-                setTimeout(() => {
+                const timeout2 = setTimeout(() => {
                     item.classList.remove('wave-animate', 'wave-scroll-down', 'wave-scroll-up');
+                    animationTimeouts.delete(timeout1);
+                    animationTimeouts.delete(timeout2);
                 }, 600);
+                
+                animationTimeouts.add(timeout2);
             }, 50);
+            
+            animationTimeouts.add(timeout1);
         }
         
         function isElementInViewport(element) {
             const rect = element.getBoundingClientRect();
             const windowHeight = window.innerHeight || document.documentElement.clientHeight;
             
-            // Element is in viewport if it's at least 50% visible
+            // Element is in viewport if it's at least 30% visible
             return (
-                rect.top < windowHeight * 0.8 &&
-                rect.bottom > windowHeight * 0.2
+                rect.top < windowHeight * 0.9 &&
+                rect.bottom > windowHeight * 0.1
             );
         }
         
         function handleScroll() {
+            if (isScrolling) return;
+            
             const currentScrollY = window.pageYOffset;
             const scrollDirection = currentScrollY > lastScrollY ? 'down' : 'up';
             const scrollDelta = Math.abs(currentScrollY - lastScrollY);
             
-            // Only trigger animation if scroll is significant enough
-            if (scrollDelta > 20) {
+            // Only trigger animation if scroll is significant enough and not already animating
+            if (scrollDelta > 30 && animationTimeouts.size === 0) {
+                isScrolling = true;
+                
                 // Get visible service items in order
                 const visibleItems = Array.from(serviceItems).filter(item => isElementInViewport(item));
                 
@@ -548,19 +563,24 @@ document.addEventListener('DOMContentLoaded', function() {
                         visibleItems.forEach((item, index) => {
                             setTimeout(() => {
                                 triggerWaveAnimation(item, scrollDirection);
-                            }, index * 150); // Slightly longer delay for smoother wave
+                            }, index * 120);
                         });
                     } else {
                         // Wave flows from bottom to top
                         visibleItems.reverse().forEach((item, index) => {
                             setTimeout(() => {
                                 triggerWaveAnimation(item, scrollDirection);
-                            }, index * 150);
+                            }, index * 120);
                         });
                     }
                 }
                 
                 lastScrollY = currentScrollY;
+                
+                // Reset scrolling state after wave completes
+                setTimeout(() => {
+                    isScrolling = false;
+                }, visibleItems.length * 120 + 600);
             }
             
             // Clear existing timeout
@@ -568,8 +588,8 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Set timeout to reset animation state
             scrollTimeout = setTimeout(() => {
-                isAnimating = false;
-            }, 200);
+                isScrolling = false;
+            }, 300);
         }
         
         // Throttled scroll listener for better performance
@@ -589,13 +609,27 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Handle orientation change
         window.addEventListener('orientationchange', function() {
+            // Clear all timeouts on orientation change
+            animationTimeouts.forEach(timeout => clearTimeout(timeout));
+            animationTimeouts.clear();
+            
             setTimeout(() => {
                 lastScrollY = window.pageYOffset;
-            }, 100);
+                isScrolling = false;
+            }, 200);
+        });
+        
+        // Handle resize events
+        window.addEventListener('resize', function() {
+            // Clear all timeouts on resize
+            animationTimeouts.forEach(timeout => clearTimeout(timeout));
+            animationTimeouts.clear();
+            isScrolling = false;
         });
         
         // Clean up on page unload
         window.addEventListener('beforeunload', function() {
+            animationTimeouts.forEach(timeout => clearTimeout(timeout));
             window.removeEventListener('scroll', requestTick);
         });
     }
