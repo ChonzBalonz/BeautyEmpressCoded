@@ -487,150 +487,64 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Mobile Service Items Wave Animation on Scroll
+// Mobile Service Items Viewport Animation
 document.addEventListener('DOMContentLoaded', function() {
     // Only run on mobile devices
     const isMobile = window.innerWidth <= 767;
     
     if (isMobile) {
         const serviceItems = document.querySelectorAll('.service-item');
-        let lastScrollY = window.pageYOffset;
-        let scrollTimeout;
-        let animationTimeouts = new Set();
-        let isScrolling = false;
+        const observerOptions = {
+            root: null,
+            rootMargin: '-10% 0px -10% 0px', // Trigger when 10% visible
+            threshold: 0.1
+        };
         
-        function triggerWaveAnimation(item, scrollDirection) {
-            // Clear any existing timeouts for this item
-            const itemId = item.dataset.itemId || Math.random().toString(36).substr(2, 9);
-            item.dataset.itemId = itemId;
-            
-            // Remove any existing animation classes
-            item.classList.remove('wave-animate', 'wave-scroll-down', 'wave-scroll-up');
-            
-            // Add the appropriate animation class
-            const timeout1 = setTimeout(() => {
-                item.classList.add('wave-animate', `wave-scroll-${scrollDirection}`);
+        function handleIntersection(entries) {
+            entries.forEach(entry => {
+                const item = entry.target;
                 
-                // Remove animation classes after animation completes
-                const timeout2 = setTimeout(() => {
-                    item.classList.remove('wave-animate', 'wave-scroll-down', 'wave-scroll-up');
-                    animationTimeouts.delete(timeout1);
-                    animationTimeouts.delete(timeout2);
-                }, 600);
-                
-                animationTimeouts.add(timeout2);
-            }, 50);
-            
-            animationTimeouts.add(timeout1);
-        }
-        
-        function isElementInViewport(element) {
-            const rect = element.getBoundingClientRect();
-            const windowHeight = window.innerHeight || document.documentElement.clientHeight;
-            
-            // Element is in viewport if it's at least 30% visible
-            return (
-                rect.top < windowHeight * 0.9 &&
-                rect.bottom > windowHeight * 0.1
-            );
-        }
-        
-        function handleScroll() {
-            if (isScrolling) return;
-            
-            const currentScrollY = window.pageYOffset;
-            const scrollDirection = currentScrollY > lastScrollY ? 'down' : 'up';
-            const scrollDelta = Math.abs(currentScrollY - lastScrollY);
-            
-            // Only trigger animation if scroll is significant enough and not already animating
-            if (scrollDelta > 30 && animationTimeouts.size === 0) {
-                isScrolling = true;
-                
-                // Get visible service items in order
-                const visibleItems = Array.from(serviceItems).filter(item => isElementInViewport(item));
-                
-                if (visibleItems.length > 0) {
-                    // Sort items by their position on screen
-                    visibleItems.sort((a, b) => {
-                        const rectA = a.getBoundingClientRect();
-                        const rectB = b.getBoundingClientRect();
-                        return rectA.top - rectB.top;
-                    });
-                    
-                    // Create wave effect based on scroll direction
-                    if (scrollDirection === 'down') {
-                        // Wave flows from top to bottom
-                        visibleItems.forEach((item, index) => {
-                            setTimeout(() => {
-                                triggerWaveAnimation(item, scrollDirection);
-                            }, index * 120);
-                        });
-                    } else {
-                        // Wave flows from bottom to top
-                        visibleItems.reverse().forEach((item, index) => {
-                            setTimeout(() => {
-                                triggerWaveAnimation(item, scrollDirection);
-                            }, index * 120);
-                        });
-                    }
+                if (entry.isIntersecting) {
+                    // Card enters viewport - add pop-up effect
+                    item.classList.add('in-view');
+                } else {
+                    // Card leaves viewport - remove pop-up effect
+                    item.classList.remove('in-view');
                 }
-                
-                lastScrollY = currentScrollY;
-                
-                // Reset scrolling state after wave completes
-                setTimeout(() => {
-                    isScrolling = false;
-                }, visibleItems.length * 120 + 600);
-            }
-            
-            // Clear existing timeout
-            clearTimeout(scrollTimeout);
-            
-            // Set timeout to reset animation state
-            scrollTimeout = setTimeout(() => {
-                isScrolling = false;
-            }, 300);
+            });
         }
         
-        // Throttled scroll listener for better performance
-        let ticking = false;
-        function requestTick() {
-            if (!ticking) {
-                requestAnimationFrame(() => {
-                    handleScroll();
-                    ticking = false;
-                });
-                ticking = true;
-            }
-        }
+        // Create intersection observer
+        const observer = new IntersectionObserver(handleIntersection, observerOptions);
         
-        // Add scroll listener with passive option for better mobile performance
-        window.addEventListener('scroll', requestTick, { passive: true });
+        // Observe all service items
+        serviceItems.forEach(item => {
+            observer.observe(item);
+        });
         
         // Handle orientation change
         window.addEventListener('orientationchange', function() {
-            // Clear all timeouts on orientation change
-            animationTimeouts.forEach(timeout => clearTimeout(timeout));
-            animationTimeouts.clear();
-            
+            // Re-observe items after orientation change
             setTimeout(() => {
-                lastScrollY = window.pageYOffset;
-                isScrolling = false;
-            }, 200);
+                serviceItems.forEach(item => {
+                    observer.unobserve(item);
+                    observer.observe(item);
+                });
+            }, 100);
         });
         
         // Handle resize events
         window.addEventListener('resize', function() {
-            // Clear all timeouts on resize
-            animationTimeouts.forEach(timeout => clearTimeout(timeout));
-            animationTimeouts.clear();
-            isScrolling = false;
+            // Re-observe items after resize
+            serviceItems.forEach(item => {
+                observer.unobserve(item);
+                observer.observe(item);
+            });
         });
         
         // Clean up on page unload
         window.addEventListener('beforeunload', function() {
-            animationTimeouts.forEach(timeout => clearTimeout(timeout));
-            window.removeEventListener('scroll', requestTick);
+            observer.disconnect();
         });
     }
 });
