@@ -499,10 +499,6 @@ document.addEventListener('DOMContentLoaded', function() {
         let isAnimating = false;
         
         function triggerWaveAnimation(item, scrollDirection) {
-            if (isAnimating) return;
-            
-            isAnimating = true;
-            
             // Remove any existing animation classes
             item.classList.remove('wave-animate', 'wave-scroll-down', 'wave-scroll-up');
             
@@ -513,7 +509,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Remove animation classes after animation completes
                 setTimeout(() => {
                     item.classList.remove('wave-animate', 'wave-scroll-down', 'wave-scroll-up');
-                    isAnimating = false;
                 }, 600);
             }, 50);
         }
@@ -536,14 +531,34 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Only trigger animation if scroll is significant enough
             if (scrollDelta > 20) {
-                serviceItems.forEach((item, index) => {
-                    if (isElementInViewport(item)) {
-                        // Add a small delay between items for a wave effect
-                        setTimeout(() => {
-                            triggerWaveAnimation(item, scrollDirection);
-                        }, index * 100);
+                // Get visible service items in order
+                const visibleItems = Array.from(serviceItems).filter(item => isElementInViewport(item));
+                
+                if (visibleItems.length > 0) {
+                    // Sort items by their position on screen
+                    visibleItems.sort((a, b) => {
+                        const rectA = a.getBoundingClientRect();
+                        const rectB = b.getBoundingClientRect();
+                        return rectA.top - rectB.top;
+                    });
+                    
+                    // Create wave effect based on scroll direction
+                    if (scrollDirection === 'down') {
+                        // Wave flows from top to bottom
+                        visibleItems.forEach((item, index) => {
+                            setTimeout(() => {
+                                triggerWaveAnimation(item, scrollDirection);
+                            }, index * 150); // Slightly longer delay for smoother wave
+                        });
+                    } else {
+                        // Wave flows from bottom to top
+                        visibleItems.reverse().forEach((item, index) => {
+                            setTimeout(() => {
+                                triggerWaveAnimation(item, scrollDirection);
+                            }, index * 150);
+                        });
                     }
-                });
+                }
                 
                 lastScrollY = currentScrollY;
             }
