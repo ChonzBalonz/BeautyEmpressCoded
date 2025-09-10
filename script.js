@@ -293,17 +293,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Book Service Button
-const bookButton = document.querySelector('.book-button');
-if (bookButton) {
-    bookButton.addEventListener('click', function() {
-        // Scroll to contact form
-        const contactSection = document.querySelector('.contact');
-        if (contactSection) {
-            contactSection.scrollIntoView({ behavior: 'smooth' });
-        }
-    });
-}
+// Book Service Button - Now handled by direct link to scheduling URL
+// No JavaScript needed as buttons are now anchor tags with href
 
 function showLoadingState() {
     const submitBtn = document.querySelector('.submit-button');
@@ -475,21 +466,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Handle nav book button
-    if (navBookButton) {
-        navBookButton.addEventListener('click', function() {
-            const contactSection = document.querySelector('.contact');
-            if (contactSection) {
-                contactSection.scrollIntoView({ behavior: 'smooth' });
-                // Close mobile menu
-                if (navToggle && navMenu) {
-                    navToggle.classList.remove('active');
-                    navMenu.classList.remove('active');
-                    document.body.style.overflow = '';
-                }
-            }
-        });
-    }
+    // Handle nav book button - Now handled by direct link to scheduling URL
+    // No JavaScript needed as button is now anchor tag with href
     
     // Smooth scrolling for navigation links
     navLinks.forEach(link => {
