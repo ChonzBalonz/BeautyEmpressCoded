@@ -581,3 +581,60 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+// Instagram Carousel Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const carousel = document.querySelector('.instagram-carousel');
+    if (!carousel) return;
+    
+    const track = carousel.querySelector('.carousel-track');
+    const slides = carousel.querySelectorAll('.carousel-slide');
+    const indicators = carousel.querySelectorAll('.carousel-indicator');
+    
+    let currentSlide = 0;
+    const totalSlides = slides.length;
+    
+    // Create indicators if they don't exist
+    if (indicators.length === 0) {
+        const indicatorsContainer = document.createElement('div');
+        indicatorsContainer.className = 'carousel-indicators';
+        
+        for (let i = 0; i < totalSlides; i++) {
+            const indicator = document.createElement('div');
+            indicator.className = 'carousel-indicator';
+            if (i === 0) indicator.classList.add('active');
+            indicator.addEventListener('click', () => goToSlide(i));
+            indicatorsContainer.appendChild(indicator);
+        }
+        
+        carousel.appendChild(indicatorsContainer);
+    }
+    
+    function goToSlide(slideIndex) {
+        currentSlide = slideIndex;
+        const translateX = -currentSlide * 20; // 20% per slide
+        track.style.transform = `translateX(${translateX}%)`;
+        
+        // Update indicators
+        document.querySelectorAll('.carousel-indicator').forEach((indicator, index) => {
+            indicator.classList.toggle('active', index === currentSlide);
+        });
+    }
+    
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % totalSlides;
+        goToSlide(currentSlide);
+    }
+    
+    // Auto-advance every 4 seconds
+    setInterval(nextSlide, 4000);
+    
+    // Pause on hover
+    carousel.addEventListener('mouseenter', () => {
+        clearInterval(window.carouselInterval);
+    });
+    
+    carousel.addEventListener('mouseleave', () => {
+        window.carouselInterval = setInterval(nextSlide, 4000);
+    });
+});
