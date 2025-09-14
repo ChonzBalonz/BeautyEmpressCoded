@@ -598,7 +598,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     let scrollPosition = 0;
     let scrollSpeed = 2; // pixels per frame - increased speed
-    const slideWidth = 340; // width of each slide including gap
+    const slideWidth = 370; // width of each slide (340px) + gap (30px)
     const totalWidth = slides.length * slideWidth;
     let isPaused = false;
     

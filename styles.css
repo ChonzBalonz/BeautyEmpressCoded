@@ -7,6 +7,17 @@
 
 html {
     scroll-behavior: smooth;
+    overflow-x: hidden; /* Prevent horizontal scrolling on html */
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* Prevent horizontal scrolling on all containers */
+.container, section {
+    overflow-x: hidden;
+    max-width: 100%;
 }
 
 body {
@@ -15,6 +26,8 @@ body {
     color: white;
     background: black;
     padding-top: 0; /* Will be adjusted by mobile nav */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    max-width: 100vw; /* Ensure body doesn't exceed viewport width */
 }
 
 /* Mobile Navigation */
@@ -400,14 +413,14 @@ body {
 /* Instagram Showcase Styles */
 .instagram-showcase {
     background: linear-gradient(135deg, #1a1a1a, #000);
-    padding: 80px 0;
+    padding: 40px 0 80px 0;
     position: relative;
     z-index: 2;
 }
 
 .instagram-header {
     text-align: center;
-    margin-bottom: 60px;
+    margin-bottom: 40px;
 }
 
 .instagram-featured {
@@ -451,41 +464,55 @@ body {
     overflow: hidden;
     border-radius: 20px;
     box-shadow: 0 20px 40px rgba(212, 175, 55, 0.2);
+    padding: 20px 0;
+    touch-action: pan-y; /* Allow vertical scrolling but prevent horizontal */
 }
 
 .instagram-carousel {
     position: relative;
     width: 100%;
-    height: 600px;
+    height: auto;
+    min-height: 700px;
     overflow: hidden;
+    padding: 20px 0;
+    touch-action: pan-y; /* Allow vertical scrolling but prevent horizontal */
+    user-select: none; /* Prevent text selection during scrolling */
 }
 
 .carousel-track {
     display: flex;
     width: max-content;
-    height: 100%;
-    align-items: center;
-    gap: 20px;
-    padding: 0 20px;
+    height: auto;
+    align-items: flex-start;
+    gap: 30px;
+    padding: 20px 40px;
 }
 
 .carousel-slide {
-    width: 320px;
-    height: 100%;
+    width: 340px;
+    height: auto;
+    min-height: 600px;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    padding: 20px;
+    padding: 0;
     box-sizing: border-box;
     flex-shrink: 0;
+    overflow: visible;
 }
 
 .carousel-slide blockquote.instagram-media {
-    max-width: 100% !important;
-    width: 100% !important;
+    max-width: 320px !important;
+    width: 320px !important;
+    min-width: 320px !important;
+    height: auto !important;
+    min-height: 580px !important;
     margin: 0 !important;
+    padding: 0 !important;
     border-radius: 15px !important;
     box-shadow: 0 15px 35px rgba(212, 175, 55, 0.3) !important;
+    overflow: visible !important;
+    display: block !important;
 }
 
 .instagram-grid {
@@ -844,11 +871,35 @@ body {
     }
     
     .instagram-showcase {
-        padding: 60px 0;
+        padding: 30px 0 60px 0;
     }
     
     .instagram-header {
-        margin-bottom: 40px;
+        margin-bottom: 30px;
+    }
+    
+    .instagram-carousel {
+        min-height: 600px;
+        padding: 15px 0;
+    }
+    
+    .carousel-track {
+        gap: 20px;
+        padding: 15px 30px;
+        align-items: flex-start;
+    }
+    
+    .carousel-slide {
+        width: 280px;
+        min-height: 500px;
+        align-items: flex-start;
+    }
+    
+    .carousel-slide blockquote.instagram-media {
+        max-width: 280px !important;
+        width: 280px !important;
+        min-width: 280px !important;
+        min-height: 480px !important;
     }
     
     .portfolio-header {
