@@ -582,59 +582,49 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// Instagram Carousel Functionality
+// Instagram Carousel Functionality - Auto-scrolling horizontal feed
 document.addEventListener('DOMContentLoaded', function() {
     const carousel = document.querySelector('.instagram-carousel');
     if (!carousel) return;
     
     const track = carousel.querySelector('.carousel-track');
     const slides = carousel.querySelectorAll('.carousel-slide');
-    const indicators = carousel.querySelectorAll('.carousel-indicator');
     
-    let currentSlide = 0;
-    const totalSlides = slides.length;
+    // Remove any existing indicators
+    const existingIndicators = carousel.querySelector('.carousel-indicators');
+    if (existingIndicators) {
+        existingIndicators.remove();
+    }
     
-    // Create indicators if they don't exist
-    if (indicators.length === 0) {
-        const indicatorsContainer = document.createElement('div');
-        indicatorsContainer.className = 'carousel-indicators';
-        
-        for (let i = 0; i < totalSlides; i++) {
-            const indicator = document.createElement('div');
-            indicator.className = 'carousel-indicator';
-            if (i === 0) indicator.classList.add('active');
-            indicator.addEventListener('click', () => goToSlide(i));
-            indicatorsContainer.appendChild(indicator);
+    let scrollPosition = 0;
+    let scrollSpeed = 2; // pixels per frame - increased speed
+    const slideWidth = 340; // width of each slide including gap
+    const totalWidth = slides.length * slideWidth;
+    let isPaused = false;
+    
+    function autoScroll() {
+        if (!isPaused) {
+            scrollPosition += scrollSpeed;
+            
+            // Reset position when we've scrolled past all slides
+            if (scrollPosition >= totalWidth) {
+                scrollPosition = 0;
+            }
+            
+            track.style.transform = `translateX(-${scrollPosition}px)`;
         }
-        
-        carousel.appendChild(indicatorsContainer);
+        requestAnimationFrame(autoScroll);
     }
     
-    function goToSlide(slideIndex) {
-        currentSlide = slideIndex;
-        const translateX = -currentSlide * 20; // 20% per slide
-        track.style.transform = `translateX(${translateX}%)`;
-        
-        // Update indicators
-        document.querySelectorAll('.carousel-indicator').forEach((indicator, index) => {
-            indicator.classList.toggle('active', index === currentSlide);
-        });
-    }
+    // Start auto-scrolling
+    autoScroll();
     
-    function nextSlide() {
-        currentSlide = (currentSlide + 1) % totalSlides;
-        goToSlide(currentSlide);
-    }
-    
-    // Auto-advance every 4 seconds
-    setInterval(nextSlide, 4000);
-    
-    // Pause on hover
+    // Pause scrolling on hover
     carousel.addEventListener('mouseenter', () => {
-        clearInterval(window.carouselInterval);
+        isPaused = true;
     });
     
     carousel.addEventListener('mouseleave', () => {
-        window.carouselInterval = setInterval(nextSlide, 4000);
+        isPaused = false;
     });
 });
